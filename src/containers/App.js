@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import CardList from './CardList';
-import SearchBox from './SearchBox';
-import {robots} from './robots.js';
+import CardList from '../components/CardList';
+import SearchBox from '../components/SearchBox';
+import {robots} from '../robots.js';
+import Scroll from '../components/Scroll';
 import './App.css';
-var httpClient = require('./HttpClient');
+var httpClient = require('../HttpClient');
 
 class App extends Component {
 	constructor(){
@@ -38,11 +39,17 @@ class App extends Component {
 	}
 
 	render(){
+		if(this.state.robots.length <=0){
+			return <h1>Loading</h1>;
+		}
+
 		return (
 			<div className='tc'>
 				<h1 className="f2">RoboFriends</h1>
 				<SearchBox onSearchFieldChange= {this.onSearchFieldChange}/>
-				<CardList robots={this.state.robots}/>
+				<Scroll>
+					<CardList robots={this.state.robots}/>
+				</Scroll>
 			</div>
 		);
 	}
