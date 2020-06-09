@@ -12,9 +12,11 @@ const App = () => {
 
 	const onSearchFieldChange = (searchField) => {
 		setSearchField(searchField);
-		setRobots(robots.filter(function(item){
+		fetchData().then(function(data){
+			setRobots(data.filter(function(item){
 				return item.name.toLowerCase().includes(searchField.toLowerCase())
 			}));
+		});
 	}
 
 	const updateData = (data) => {
@@ -22,12 +24,20 @@ const App = () => {
 	}
 
 	useEffect(()=> {
-		httpClient.makeGetRequest({
-			host: 'jsonplaceholder.typicode.com/',
-			path: 'users',
-			method: 'GET'
-		}, updateData);
-	});
+		fetchData().then(updateData);
+	}, []);
+
+	const fetchData = () => {
+		return new Promise((resolve, reject) => {
+			httpClient.makeGetRequest({
+				host: 'jsonplaceholder.typicode.com/',
+				path: 'users',
+				method: 'GET'
+			}, function (data){
+				resolve(data);
+			});
+		});
+	}
 
 	return robots.length <=0 ?
 			<h1>Loading</h1>:
